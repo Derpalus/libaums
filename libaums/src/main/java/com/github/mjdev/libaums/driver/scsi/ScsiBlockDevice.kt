@@ -145,6 +145,7 @@ class ScsiBlockDevice(private val usbCommunication: UsbCommunication, private va
                     val inBuffer2 = ByteBuffer.allocate(36)
                     val requestSense = ScsiRequestSense(inBuffer2.array().size.toByte(), lun=lun)
                     transferOneCommand(requestSense, inBuffer2)
+                    throw IOException("Command failed")
                 }
                 return true
             } catch(e: IOException) {
