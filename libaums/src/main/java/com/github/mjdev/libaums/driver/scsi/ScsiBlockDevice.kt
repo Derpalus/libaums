@@ -238,14 +238,15 @@ class ScsiBlockDevice(private val usbCommunication: UsbCommunication, private va
         }
         cswBuffer.clear()
 
+        csw.read(cswBuffer)
+
         if (csw.dCswTag != command.dCbwTag) {
             throw IOException("wrong csw tag!")
         }
 
         return true
 
-        /*csw.read(cswBuffer)
-        if (csw.bCswStatus.toInt() != CommandStatusWrapper.COMMAND_PASSED) {
+        /*if (csw.bCswStatus.toInt() != CommandStatusWrapper.COMMAND_PASSED) {
             throw IOException("Unsuccessful Csw status: " + csw.bCswStatus)
         }
 
