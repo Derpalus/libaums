@@ -53,7 +53,7 @@ import com.github.mjdev.libaums.server.http.server.AsyncHttpServer
 import com.github.mjdev.libaums.usb.UsbCommunicationFactory
 import com.github.mjdev.libaums.usb.UsbCommunicationFactory.registerCommunication
 import com.github.mjdev.libaums.usb.UsbCommunicationFactory.underlyingUsbCommunication
-import me.jahnen.libaums.libusbcommunication.LibusbCommunicationCreator
+//import me.jahnen.libaums.libusbcommunication.LibusbCommunicationCreator
 import java.io.*
 import java.nio.ByteBuffer
 import java.util.*
@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener {
 
         init {
             registerFileSystem(JavaFsFileSystemCreator())
-            registerCommunication(LibusbCommunicationCreator())
+            //registerCommunication(LibusbCommunicationCreator())
             underlyingUsbCommunication = UsbCommunicationFactory.UnderlyingUsbCommunication.OTHER
         }
     }

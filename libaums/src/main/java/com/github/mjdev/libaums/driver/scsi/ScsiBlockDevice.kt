@@ -141,7 +141,12 @@ class ScsiBlockDevice(private val usbCommunication: UsbCommunication, private va
     private fun transferCommand(command: CommandBlockWrapper, inBuffer: ByteBuffer): Boolean {
         for(i in 0..MAX_RECOVERY_ATTEMPTS) {
             try {
-                return transferOneCommand(command, inBuffer)
+                if (transferOneCommand(command, inBuffer).toInt() == CommandStatusWrapper.COMMAND_FAILED) {
+                    val inBuffer2 = ByteBuffer.allocate(36)
+                    val requestSense = ScsiRequestSense(inBuffer2.array().size.toByte(), lun=lun)
+                    transferOneCommand(requestSense, inBuffer2)
+                }
+                return true
             } catch(e: IOException) {
                 Log.e(TAG, "Error transferring command; errno ${ErrNo.errno} ${ErrNo.errstr}")
 
@@ -184,7 +189,7 @@ class ScsiBlockDevice(private val usbCommunication: UsbCommunication, private va
     }
 
     @Throws(IOException::class)
-    private fun transferOneCommand(command: CommandBlockWrapper, inBuffer: ByteBuffer): Boolean {
+    private fun transferOneCommand(command: CommandBlockWrapper, inBuffer: ByteBuffer): Byte {
         val outArray = outBuffer.array()
         Arrays.fill(outArray, 0.toByte())
 
@@ -244,7 +249,7 @@ class ScsiBlockDevice(private val usbCommunication: UsbCommunication, private va
             throw IOException("wrong csw tag!")
         }
 
-        return true
+        return csw.bCswStatus
 
         /*if (csw.bCswStatus.toInt() != CommandStatusWrapper.COMMAND_PASSED) {
             throw IOException("Unsuccessful Csw status: " + csw.bCswStatus)
