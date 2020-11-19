@@ -142,10 +142,11 @@ class ScsiBlockDevice(private val usbCommunication: UsbCommunication, private va
         for(i in 0..MAX_RECOVERY_ATTEMPTS) {
             try {
                 if (transferOneCommand(command, inBuffer).toInt() == CommandStatusWrapper.COMMAND_FAILED) {
-                    val inBuffer2 = ByteBuffer.allocate(36)
+                    val inBuffer2 = ByteBuffer.allocate(20)
                     val requestSense = ScsiRequestSense(inBuffer2.array().size.toByte(), lun=lun)
                     transferOneCommand(requestSense, inBuffer2)
-                    throw IOException("Command failed")
+                    transferOneCommand(command, inBuffer)
+                    //throw IOException("Command failed")
                 }
                 return true
             } catch(e: IOException) {
