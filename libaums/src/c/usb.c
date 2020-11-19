@@ -3,7 +3,8 @@
 #include <linux/usbdevice_fs.h>
 #include <errno.h>
 #include <string.h>
-#include "../../../libusbcommunication/src/c/log.h"
+#include "log.h"
+//#include "../../../libusbcommunication/src/c/log.h"
 
 #define TAG "native_usb_ioctl"
 
